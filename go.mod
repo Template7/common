@@ -1,4 +1,4 @@
-module common
+module github.com/Template7/common
 
 go 1.16
 
