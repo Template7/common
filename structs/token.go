@@ -1,4 +1,4 @@
-package collection
+package structs
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 

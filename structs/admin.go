@@ -1,4 +1,4 @@
-package collection
+package structs
 
 type Admin struct {
 	//Id       *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
