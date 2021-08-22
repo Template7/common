@@ -8,6 +8,8 @@
 
 Common lib for the project Template7.
 
+<br/>
+
 ## Install
 
 ```
