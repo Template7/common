@@ -73,8 +73,6 @@ func GetWithContext(ctx context.Context) *logrus.Entry {
 func GetLogger() *logrus.Logger {
 	once.Do(func() {
 		logger.SetReportCaller(true)
-
-		logger.Debug("logger initialized")
 	})
 	return logger
 }
