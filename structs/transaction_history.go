@@ -1,25 +1,25 @@
 package structs
 
 const (
-	UnitCent  unit = "cent"  // 10^(-2)
-	UnitMilli unit = "milli" // 10^(-3)
-	UnitMicro unit = "micro" // 10^(-6)
-	UnitNano  unit = "nano"  // 10^(-9)
-	UnitPico  unit = "pico"  // 10^(-12)
+	UnitCent  Unit = "cent"  // 10^(-2)
+	UnitMilli Unit = "milli" // 10^(-3)
+	UnitMicro Unit = "micro" // 10^(-6)
+	UnitNano  Unit = "nano"  // 10^(-9)
+	UnitPico  Unit = "pico"  // 10^(-12)
 
-	CurrencyNTD currency = "NTD"
-	CurrencyUSD currency = "USD"
+	CurrencyNTD Currency = "NTD"
+	CurrencyUSD Currency = "USD"
 )
 
-type unit string
-type currency string
+type Unit string
+type Currency string
 
 type TransactionHistory struct {
 	TransactionId string   `json:"transaction_id" bson:"transaction_id"`
 	From          string   `json:"from" bson:"from"` // from wallet ID
 	To            string   `json:"to" bson:"to"`     // to wallet ID
-	Amount        int      `json:"amount" bson:"amount"`
-	Unit          unit     `json:"unit" bson:"unit"`
-	Currency      currency `json:"currency" bson:"currency"`
-	Note          string   `json:"note" bson:"note"`
+	Amount   int      `json:"amount" bson:"amount"`
+	Unit     Unit     `json:"unit" bson:"unit"`
+	Currency Currency `json:"currency" bson:"currency"`
+	Note     string   `json:"note" bson:"note"`
 }

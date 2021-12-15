@@ -11,9 +11,9 @@ type Wallet struct {
 }
 
 type Balance struct {
-	WalletId string   `gorm:"type:VARCHAR(36) NOT NULL index"`
-	Currency currency `gorm:"type:VARCHAR(36) NOT NULL"`
-	Amount   int      `gorm:"type:bigint(20);"`
-	Unit     unit     `gorm:"type:VARCHAR(10) NOT NULL"` // should be the min unit
+	WalletId  string    `gorm:"type:VARCHAR(36) NOT NULL index"`
+	Currency  Currency  `gorm:"type:VARCHAR(36) NOT NULL"`
+	Amount    int       `gorm:"type:bigint(20);"`
+	Unit      Unit      `gorm:"type:VARCHAR(10) NOT NULL"` // should be the min Unit
 	UpdatedAt time.Time `gorm:"type:timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
 }
