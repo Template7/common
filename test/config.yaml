@@ -1,0 +1,3 @@
+log:
+  formatter: "STRING" # JSON|STRING
+  level: "DEBUG"
