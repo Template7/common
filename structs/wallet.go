@@ -1,19 +1,17 @@
 package structs
 
-import "time"
-
 type Wallet struct {
-	Id     string `gorm:"type:VARCHAR(36) NOT NULL primary_key;"`
-	UserId string `gorm:"type:VARCHAR(36) NOT NULL index;"`
+	Id     string `gorm:"column:id;type:VARCHAR(36) NOT NULL primary_key;"`
+	UserId string `gorm:"column:userId;type:VARCHAR(36) NOT NULL index;"`
 	//Status string
-	CreatedAt time.Time `gorm:"type:timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time `gorm:"type:timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
+	CreatedAt int64 `gorm:"column:createdAt;autoCreateTime"`
+	UpdatedAt int64 `gorm:"column:updatedAt;autoUpdateTime:milli"`
 }
 
 type Balance struct {
-	WalletId  string    `gorm:"type:VARCHAR(36) NOT NULL index"`
-	Currency  Currency  `gorm:"type:VARCHAR(36) NOT NULL"`
-	Amount    int       `gorm:"type:bigint(20);"`
-	Unit      Unit      `gorm:"type:VARCHAR(10) NOT NULL"` // should be the min Unit
-	UpdatedAt time.Time `gorm:"type:timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
+	WalletId  string   `gorm:"column:walletId;type:VARCHAR(36) NOT NULL index"`
+	Currency  Currency `gorm:"column:currency;type:VARCHAR(36) NOT NULL"`
+	Amount    uint     `gorm:"column:amount;type:bigint(20);default:0"`
+	Unit      Unit     `gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico"` // should be the min Unit
+	UpdatedAt int64    `gorm:"column:updatedAt;autoUpdateTime:milli"`
 }
