@@ -30,6 +30,7 @@ const (
 
 type User struct {
 	Id          *primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty" swaggerignore:"true"` // mongo default document id
+	UserId      string              `json:"user_id" bson:"user_id"`
 	BasicInfo   UserInfo            `json:"basic_info" bson:"basic_info"`
 	Mobile      string              `json:"mobile" bson:"mobile" example:"+886987654321"` // +886987654321
 	Email       string              `json:"email" bson:"email" example:"username@mail.com"`
@@ -50,8 +51,8 @@ type UserInfo struct {
 }
 
 type LoginInfo struct {
-	Os     LoginClientOs `json:"os" bson:"os"`
-	Device string        `json:"device" bson:"device" binding:"required"` // iPhoneN, PixelN, NoteN, ...
+	Os            LoginClientOs `json:"os" bson:"os"`
+	Device        string        `json:"device" bson:"device" binding:"required"` // iPhoneN, PixelN, NoteN, ...
 	Channel       LoginChannel  `json:"channel" bson:"channel"`
 	ChannelUserId string        `json:"channel_user_id" bson:"channel_user_id"` // user id of the channel
 }
