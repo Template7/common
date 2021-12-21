@@ -2,7 +2,7 @@ package structs
 
 type Wallet struct {
 	Id     string `gorm:"primaryKey;column:id;type:VARCHAR(36) NOT NULL"`
-	UserId string `gorm:"column:userId;type:VARCHAR(36) NOT NULL index;"`
+	UserId string `gorm:"index:user_id;column:userId;type:VARCHAR(36) NOT NULL"`
 	//Status string
 	CreatedAt int64 `gorm:"column:createdAt;autoCreateTime"`
 	UpdatedAt int64 `gorm:"column:updatedAt;autoUpdateTime:milli"`
