@@ -1,7 +1,7 @@
 package structs
 
 type Wallet struct {
-	Id     string `gorm:"column:id;type:VARCHAR(36) NOT NULL primaryKey;"`
+	Id     string `gorm:"primaryKey;column:id;type:VARCHAR(36) NOT NULL"`
 	UserId string `gorm:"column:userId;type:VARCHAR(36) NOT NULL index;"`
 	//Status string
 	CreatedAt int64 `gorm:"column:createdAt;autoCreateTime"`
