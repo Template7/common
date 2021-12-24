@@ -30,10 +30,10 @@ const (
 
 type User struct {
 	Id          *primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty" swaggerignore:"true"` // mongo default document id
-	UserId      string              `json:"user_id" bson:"user_id"`
+	UserId      string              `json:"user_id" bson:"user_id" validate:"uuid"`
 	BasicInfo   UserInfo            `json:"basic_info" bson:"basic_info"`
 	Mobile      string              `json:"mobile" bson:"mobile" example:"+886987654321"` // +886987654321
-	Email       string              `json:"email" bson:"email" example:"username@mail.com"`
+	Email       string              `json:"email" bson:"email" example:"username@mail.com" validate:"uuid"`
 	Status      userStatus          `json:"status" bson:"status"`
 	LoginClient LoginInfo           `json:"login_info" bson:"login_info"`
 	LastUpdate  int64               `json:"last_update" bson:"last_update"` // unix time in second

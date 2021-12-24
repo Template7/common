@@ -15,9 +15,6 @@ func (w Wallet) TableName() string {
 type Balance struct {
 	WalletId string `gorm:"column:walletId;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique"`
 	Money
-	//Currency  Currency `gorm:"column:currency;type:VARCHAR(36) NOT NULL;index:walletId_currency,unique"`
-	//Amount    uint     `gorm:"column:amount;type:bigint(20);default:0"`
-	//Unit      Unit     `gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico"` // should be the min Unit
 	UpdatedAt int64 `gorm:"column:updatedAt;autoUpdateTime:milli"`
 }
 
@@ -32,7 +29,7 @@ type WalletData struct {
 }
 
 type Money struct {
-	Currency Currency `gorm:"column:currency;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique"`
-	Amount   uint     `gorm:"column:amount;type:bigint(20);default:0"`
-	Unit     Unit     `gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico"` // should be the min Unit
+	Currency Currency `json:"currency" bson:"currency" gorm:"column:currency;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique"`
+	Amount   uint     `json:"amount" bson:"amount" gorm:"column:amount;type:bigint(20);default:0"`
+	Unit     Unit     `json:"unit" bson:"unit" gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico"` // should be the min Unit in db
 }
