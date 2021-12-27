@@ -11,4 +11,6 @@ require (
 	go.mongodb.org/mongo-driver v1.7.0
 	golang.org/x/crypto v0.0.0-20211209193657-4570a0811e8b // indirect
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
+	gorm.io/driver/mysql v1.2.2
+	gorm.io/gorm v1.22.4
 )
