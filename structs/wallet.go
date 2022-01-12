@@ -13,8 +13,8 @@ func (w Wallet) TableName() string {
 }
 
 type Balance struct {
-	WalletId string `gorm:"column:walletId;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique"`
-	Money
+	WalletId  string `gorm:"column:walletId;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique"`
+	Money     `gorm:"embedded"`
 	UpdatedAt int64 `gorm:"column:updatedAt;autoUpdateTime:milli"`
 }
 

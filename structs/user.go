@@ -2,15 +2,15 @@ package structs
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-type userStatus int
+type UserStatus int
 type LoginClientOs int
 type LoginChannel int
 type Gender int
 
 const (
-	UserStatusBlock       userStatus = -1
-	UserStatusInitialized userStatus = 0 // not finish basic info yet
-	UserStatusActivate    userStatus = 1 // sign up finished, able to use the app
+	UserStatusBlock       UserStatus = -1
+	UserStatusInitialized UserStatus = 0 // not finish basic info yet
+	UserStatusActivate    UserStatus = 1 // sign up finished, able to use the app
 
 	LoginClientOsUnknown LoginClientOs = 0
 	LoginClientOsIos     LoginClientOs = 1
@@ -34,7 +34,7 @@ type User struct {
 	BasicInfo   UserInfo            `json:"basic_info" bson:"basic_info"`
 	Mobile      string              `json:"mobile" bson:"mobile" example:"+886987654321"` // +886987654321
 	Email       string              `json:"email" bson:"email" example:"username@mail.com" validate:"uuid"`
-	Status      userStatus          `json:"status" bson:"status"`
+	Status      UserStatus          `json:"status" bson:"status"`
 	LoginClient LoginInfo           `json:"login_info" bson:"login_info"`
 	LastUpdate  int64               `json:"last_update" bson:"last_update"` // unix time in second
 }
@@ -50,6 +50,7 @@ type UserInfo struct {
 	Bio             string   `json:"bio" bson:"bio"`
 }
 
+// TODO: handle multiple login (ex: login with fb first, then login with mobile)
 type LoginInfo struct {
 	Os            LoginClientOs `json:"os" bson:"os"`
 	Device        string        `json:"device" bson:"device" binding:"required"` // iPhoneN, PixelN, NoteN, ...
