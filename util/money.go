@@ -8,6 +8,8 @@ import (
 
 func ToPico(money structs.Money) uint {
 	switch money.Unit {
+	case structs.UnitOne:
+		return money.Amount * uint(math.Pow10(12))
 	case structs.UnitCent:
 		return money.Amount * uint(math.Pow10(10))
 	case structs.UnitMilli:
