@@ -45,11 +45,13 @@ func TestGetLogger(t *testing.T) {
 	log.Info("info log")
 	log.Warn("warn log")
 	log.Error("error log")
-
 }
 
+// go test -bench ^BenchmarkLogging -run none -benchmem ./logger
 func BenchmarkLogging(b *testing.B) {
 	viper.AddConfigPath("../test")
+	SetLevel("DEBUG")
+	SetFormatter("STRING")
 	log := GetLogger()
 	for i := 0; i < b.N; i++ {
 		log.Debug("debug log")
@@ -58,6 +60,8 @@ func BenchmarkLogging(b *testing.B) {
 
 func BenchmarkLoggingWithContext(b *testing.B) {
 	viper.AddConfigPath("../test")
+	SetLevel("DEBUG")
+	SetFormatter("STRING")
 	ctx := gin.Context{}
 	ctx.Set("X-Request-ID", "requestId")
 

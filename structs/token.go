@@ -1,6 +1,9 @@
 package structs
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 const (
 	ClaimTypeUser  claimType = "user"
@@ -15,4 +18,10 @@ type Token struct {
 	RefreshToken string                 `json:"refresh_token" bson:"refresh_token"`
 	ClaimType    claimType              `json:"-" bson:"claim_type"`
 	OtherInfo    map[string]interface{} `json:"-" bson:"other_info"`
+}
+
+type UserTokenClaims struct {
+	jwt.StandardClaims
+	UserId string `json:"userId"`
+	Status UserStatus
 }
