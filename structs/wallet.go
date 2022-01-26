@@ -31,5 +31,5 @@ type WalletData struct {
 type Money struct {
 	Currency Currency `json:"currency" bson:"currency" gorm:"column:currency;type:VARCHAR(36) NOT NULL;uniqueIndex:walletId_currency,unique" validate:"oneof=NTD USD"`
 	Amount   uint     `json:"amount" bson:"amount" gorm:"column:amount;type:bigint(20);default:0"`
-	Unit     Unit     `json:"unit" bson:"unit" gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico" validate:"oneof=cent milli micro nano pico"` // should be the min Unit in db
+	Unit     Unit     `json:"unit" bson:"unit" gorm:"column:unit;type:VARCHAR(10) NOT NULL;default:pico" validate:"oneof=unit cent milli micro nano pico"` // should be the min Unit in db
 }

@@ -53,6 +53,7 @@ func BenchmarkLogging(b *testing.B) {
 	SetLevel("DEBUG")
 	SetFormatter("STRING")
 	log := GetLogger()
+	//time.Sleep(10 * time.Second)
 	for i := 0; i < b.N; i++ {
 		log.Debug("debug log")
 	}
