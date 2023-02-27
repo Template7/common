@@ -10,6 +10,8 @@ const (
 
 	CurrencyNTD Currency = "NTD"
 	CurrencyUSD Currency = "USD"
+	CurrencyJPY Currency = "JPY"
+	CurrencyCNY Currency = "CNY"
 )
 
 type Unit string
