@@ -21,7 +21,7 @@ func ToPico(money structs.Money) uint {
 	case structs.UnitPico:
 		return money.Amount
 	default:
-		logger.GetLogger().Warn("invalid unit: ", money.Unit)
+		logger.New().With("unit", money.Unit).Warn("invalid unit")
 		return 0
 	}
 }

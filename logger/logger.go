@@ -1,78 +1,90 @@
 package logger
 
 import (
-	"context"
 	"fmt"
-	"github.com/sirupsen/logrus"
-	"runtime"
-	"strings"
+	"github.com/Template7/common/config"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"log"
+	"os"
 	"sync"
 )
 
 var (
-	once   sync.Once
-	logger = logrus.New()
-
-	// set log level
-	logLevel = map[string]logrus.Level{
-		"DEBUG": logrus.DebugLevel,
-		"INFO":  logrus.InfoLevel,
-		"WARN":  logrus.WarnLevel,
-		"ERROR": logrus.ErrorLevel,
-		"FATAL": logrus.FatalLevel,
-		"PANIC": logrus.PanicLevel,
-	}
+	once     sync.Once
+	instance *Logger
 )
 
-func SetLevel(lvl string) {
-	if l, exist := logLevel[lvl]; exist {
-		logger.SetLevel(l)
-	} else {
-		logger.Warn("unsupported log level: ", lvl, ". use default default level: debug")
-		logger.SetLevel(logrus.DebugLevel)
-	}
+type Logger struct {
+	core *zap.SugaredLogger
 }
 
-func SetFormatter(fmter string) {
-	timestampFormat := "2006-01-02 15:04:05.000"
-	callerFormatter := func(path string) string {
-		arr := strings.Split(path, "/")
-		return arr[len(arr)-1]
-	}
-	callerPrettyfier := func(f *runtime.Frame) (string, string) {
-		funcName := f.Func.Name()
-		names := strings.Split(funcName, "/")
-		return names[len(names)-1], fmt.Sprintf("%s:%d", callerFormatter(f.File), f.Line)
-	}
-	var formatter logrus.Formatter
-	switch fmter {
-	case "JSON":
-		formatter = &logrus.JSONFormatter{
-			TimestampFormat:  timestampFormat,
-			CallerPrettyfier: callerPrettyfier,
-		}
-	case "STRING":
-		formatter = &Formatter{
-			TimestampFormat:  timestampFormat,
-			CallerPrettyfier: callerPrettyfier,
-		}
-	default:
-		logger.Warn("unsupported formatter: ", fmter, ". use default string formatter")
-		formatter = &Formatter{
-			TimestampFormat:  timestampFormat,
-			CallerPrettyfier: callerPrettyfier,
-		}
-	}
-	logger.SetFormatter(formatter)
+func (l *Logger) With(key string, value interface{}) *Logger {
+	l.core = l.core.With(key, value)
+	return l
 }
 
-func GetWithContext(ctx context.Context) *logrus.Entry {
-	return logger.WithField("req_id", ctx.Value("X-Request-ID"))
+func (l *Logger) WithError(err error) *Logger {
+	l.core = l.core.With("error", err.Error())
+	return l
 }
 
-func GetLogger() *logrus.Logger {
+func (l *Logger) WithService(service string) *Logger {
+	l.core = l.core.With("service", service)
+	return l
+}
+
+func (l *Logger) Debug(msg string) {
+	l.core.Debug(msg)
+}
+
+func (l *Logger) Info(msg string) {
+	l.core.Info(msg)
+}
+
+func (l *Logger) Warn(msg string) {
+	l.core.Warn(msg)
+}
+
+func (l *Logger) Error(msg string) {
+	l.core.Error(msg)
+}
+
+func (l *Logger) Panic(msg string) {
+	l.core.Panic(msg)
+}
+
+func New() *Logger {
 	once.Do(func() {
-		logger.SetReportCaller(true)
+		cfg := config.New().Logger
+		zCfg := zap.NewProductionConfig()
+		zCfg.EncoderConfig.LevelKey = "log_level"
+		zCfg.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
+
+		lvlM := map[string]zapcore.Level{
+			"debug": zap.DebugLevel,
+			"info":  zap.InfoLevel,
+			"warn":  zap.WarnLevel,
+			"error": zap.ErrorLevel,
+		}
+
+		// set log level
+		if lvl, exist := lvlM[cfg.Level]; exist {
+			zCfg.Level = zap.NewAtomicLevelAt(lvl)
+		} else {
+			zCfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+			log.Println(fmt.Sprintf("invalid log level: %s use debug level as default", cfg.Level))
+		}
+
+		logger, _ := zCfg.Build(zap.AddCallerSkip(1))
+		defer logger.Sync() // flushes buffer, if any
+
+		instance = &Logger{
+			core: logger.Sugar().With("version", os.Getenv("GIT_TAG")),
+		}
+
+		instance.Info("logger initialized")
 	})
-	return logger
+
+	return instance
 }
