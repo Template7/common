@@ -20,18 +20,21 @@ type Logger struct {
 }
 
 func (l *Logger) With(key string, value interface{}) *Logger {
-	l.core = l.core.With(key, value)
-	return l
+	return &Logger{
+		core: l.core.With(key, value),
+	}
 }
 
 func (l *Logger) WithError(err error) *Logger {
-	l.core = l.core.With("error", err.Error())
-	return l
+	return &Logger{
+		core: l.core.With("error", err.Error()),
+	}
 }
 
 func (l *Logger) WithService(service string) *Logger {
-	l.core = l.core.With("service", service)
-	return l
+	return &Logger{
+		core: l.core.With("service", service),
+	}
 }
 
 func (l *Logger) Debug(msg string) {
