@@ -1,8 +1,10 @@
 package logger
 
 import (
+	"context"
 	"fmt"
 	"github.com/Template7/common/config"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
@@ -17,6 +19,7 @@ var (
 
 type Logger struct {
 	core *zap.SugaredLogger
+	ctx  context.Context
 }
 
 func (l *Logger) With(key string, value interface{}) *Logger {
@@ -34,6 +37,20 @@ func (l *Logger) WithError(err error) *Logger {
 func (l *Logger) WithService(service string) *Logger {
 	return &Logger{
 		core: l.core.With("service", service),
+	}
+}
+
+func (l *Logger) WithContext(ctx context.Context) *Logger {
+	if ctx == nil {
+		ctx = context.WithValue(context.Background(), "traceId", uuid.NewString())
+	} else if tId := ctx.Value("traceId"); tId == nil || tId == "" {
+		tId = uuid.NewString()
+		ctx = context.WithValue(ctx, "traceId", tId)
+	}
+
+	return &Logger{
+		core: l.core.With("traceId", ctx.Value("traceId")),
+		ctx:  ctx,
 	}
 }
 
@@ -61,8 +78,8 @@ func New() *Logger {
 	once.Do(func() {
 		cfg := config.New().Logger
 		zCfg := zap.NewProductionConfig()
-		zCfg.EncoderConfig.LevelKey = "log_level"
-		zCfg.EncoderConfig.EncodeTime = zapcore.RFC3339TimeEncoder
+		zCfg.EncoderConfig.LevelKey = "logLevel"
+		zCfg.EncoderConfig.EncodeTime = zapcore.RFC3339NanoTimeEncoder
 
 		lvlM := map[string]zapcore.Level{
 			"debug": zap.DebugLevel,
@@ -83,7 +100,7 @@ func New() *Logger {
 		defer logger.Sync() // flushes buffer, if any
 
 		instance = &Logger{
-			core: logger.Sugar().With("version", os.Getenv("GIT_TAG")),
+			core: logger.Sugar().With("version", os.Getenv("commitId")),
 		}
 
 		instance.Info("logger initialized")
