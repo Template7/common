@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/Template7/common/logger"
 	"github.com/spf13/viper"
-	"log"
 	"sync"
 )
 
@@ -13,6 +13,12 @@ const (
 type Config struct {
 	Logger struct {
 		Level string
+	}
+	Cache struct {
+		Host         string
+		Password     string
+		ReadTimeout  int
+		WriteTimeout int
 	}
 }
 
@@ -28,13 +34,15 @@ func New() *Config {
 		viper.AddConfigPath(configPath)
 		viper.SetConfigName("config")
 		if err := viper.ReadInConfig(); err != nil {
-			log.Fatal("fail to load config file: ", err.Error())
+			logger.New().WithError(err).Panic("fail to read config")
+			panic(err)
 		}
 		if err := viper.Unmarshal(&instance); err != nil {
-			log.Fatal(err)
+			logger.New().WithError(err).Panic("fail to unmarshal config")
+			panic(err)
 		}
 
-		log.Println("common config initialized")
+		logger.New().Info("common config initialized")
 	})
 	return instance
 }
