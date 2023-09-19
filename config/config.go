@@ -32,6 +32,12 @@ type Config struct {
 				Max int
 			}
 		}
+		NoSql struct {
+			Host     string
+			Port     int
+			Username string
+			Password string
+		}
 	}
 }
 

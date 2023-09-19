@@ -14,9 +14,8 @@ var (
 	instance *gorm.DB
 )
 
-func New() *gorm.DB {
+func NewSql() *gorm.DB {
 	once.Do(func() {
-		// mysql
 		cfg := config.New()
 		cs := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", cfg.Db.Sql.Username, cfg.Db.Sql.Password, cfg.Db.Sql.Host, cfg.Db.Sql.Port, cfg.Db.Sql.Db)
 		sqlDb, err := gorm.Open(mysql.Open(cs), &gorm.Config{})
