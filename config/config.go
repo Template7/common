@@ -33,6 +33,7 @@ type Config struct {
 			}
 		}
 		NoSql struct {
+			Db       string
 			Host     string
 			Port     int
 			Username string
