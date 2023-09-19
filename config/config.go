@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/Template7/common/logger"
 	"github.com/spf13/viper"
+	"log"
 	"sync"
 )
 
@@ -34,15 +34,13 @@ func New() *Config {
 		viper.AddConfigPath(configPath)
 		viper.SetConfigName("config")
 		if err := viper.ReadInConfig(); err != nil {
-			logger.New().WithError(err).Panic("fail to read config")
 			panic(err)
 		}
 		if err := viper.Unmarshal(&instance); err != nil {
-			logger.New().WithError(err).Panic("fail to unmarshal config")
 			panic(err)
 		}
 
-		logger.New().Info("common config initialized")
+		log.Println("common config initialized")
 	})
 	return instance
 }
