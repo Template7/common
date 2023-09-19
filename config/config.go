@@ -20,6 +20,19 @@ type Config struct {
 		ReadTimeout  int
 		WriteTimeout int
 	}
+	Db struct {
+		Sql struct {
+			Db         string
+			Host       string
+			Port       int
+			Username   string
+			Password   string
+			Connection struct {
+				Min int
+				Max int
+			}
+		}
+	}
 }
 
 var (
