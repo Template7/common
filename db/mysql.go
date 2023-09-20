@@ -35,6 +35,7 @@ func NewSql() *gorm.DB {
 
 		conn.SetMaxIdleConns(cfg.Db.Sql.Connection.Min)
 		conn.SetMaxOpenConns(cfg.Db.Sql.Connection.Max)
+		instance = sqlDb
 	})
 
 	return instance
