@@ -30,6 +30,7 @@ func NewNoSql() *mongo.Client {
 		if err := c.Ping(nil, nil); err != nil {
 			panic(err)
 		}
+		mInstance = c
 
 		logger.New().Info("mongo client initialized")
 	})
