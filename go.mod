@@ -3,7 +3,7 @@ module github.com/Template7/common
 go 1.21.1
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/google/uuid v1.3.1
 	github.com/redis/go-redis/v9 v9.1.0
 	github.com/spf13/viper v1.10.1
