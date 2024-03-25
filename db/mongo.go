@@ -1,12 +1,14 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"github.com/Template7/common/config"
 	"github.com/Template7/common/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"sync"
+	"time"
 )
 
 var (
@@ -27,7 +29,10 @@ func NewNoSql() *mongo.Client {
 		if err != nil {
 			panic(err)
 		}
-		if err := c.Ping(nil, nil); err != nil {
+
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		if err := c.Ping(ctx, nil); err != nil {
+			cancel()
 			panic(err)
 		}
 		mInstance = c
