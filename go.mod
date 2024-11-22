@@ -3,9 +3,11 @@ module github.com/Template7/common
 go 1.21.1
 
 require (
+	github.com/Template7/protobuf v0.1.18
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/google/uuid v1.3.1
 	github.com/redis/go-redis/v9 v9.1.0
+	github.com/shopspring/decimal v1.4.0
 	github.com/spf13/viper v1.10.1
 	go.mongodb.org/mongo-driver v1.8.2
 	go.uber.org/zap v1.17.0
@@ -45,6 +47,7 @@ require (
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.66.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
