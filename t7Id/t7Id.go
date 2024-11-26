@@ -20,7 +20,7 @@ func New() *snowflake.Node {
 		}
 		instance = node
 
-		logger.New().Info("t7 id initialized")
+		logger.GetLogger().Info("t7 id initialized")
 	})
 	return instance
 }

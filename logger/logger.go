@@ -7,11 +7,9 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
-	"sync"
 )
 
 var (
-	once     sync.Once
 	instance *Logger
 )
 
