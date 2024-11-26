@@ -7,7 +7,9 @@ import (
 	"time"
 )
 
-func New(host string, password string, readTimeout, writeTimeout int) *redis.Client {
+func New(host string, password string, readTimeout, writeTimeout int, log *logger.Logger) *redis.Client {
+	log = log.WithContext(context.Background()).WithService("redisCore")
+
 	if readTimeout == 0 {
 		readTimeout = 3
 	}
@@ -22,9 +24,9 @@ func New(host string, password string, readTimeout, writeTimeout int) *redis.Cli
 		WriteTimeout: time.Duration(writeTimeout) * time.Second,
 	})
 	if err := instance.Ping(context.Background()).Err(); err != nil {
-		logger.GetLogger().WithError(err).Panic("fail to ping redis")
+		log.WithError(err).Panic("fail to ping redis")
 		panic(err)
 	}
-	logger.GetLogger().Debug("common redis client initialized")
+	log.Info("common redis client initialized")
 	return instance
 }

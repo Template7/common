@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"fmt"
 	"gorm.io/driver/mysql"
 
@@ -8,20 +9,22 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewSql(host string, port int, username string, password string, db string, idleConn, openConn int) *gorm.DB {
+func NewSql(host string, port int, username string, password string, db string, idleConn, openConn int, log *logger.Logger) *gorm.DB {
+	log = log.WithContext(context.Background()).WithService("sqlCore")
+
 	cs := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=UTC", username, password, host, port, db)
 	sqlDb, err := gorm.Open(mysql.Open(cs), &gorm.Config{})
 	if err != nil {
-		logger.GetLogger().WithError(err).With("connection_string", cs).Panic("fail to connect to db")
+		log.WithError(err).With("connection_string", cs).Panic("fail to connect to db")
 		panic(err)
 	}
 	conn, err := sqlDb.DB()
 	if err != nil {
-		logger.GetLogger().WithError(err).Panic("fail to get db connection")
+		log.WithError(err).Panic("fail to get db connection")
 		panic(err)
 	}
 	if err := conn.Ping(); err != nil {
-		logger.GetLogger().WithError(err).Panic("fail to ping db")
+		log.WithError(err).Panic("fail to ping db")
 		panic(err)
 	}
 
@@ -34,6 +37,6 @@ func NewSql(host string, port int, username string, password string, db string, 
 	conn.SetMaxIdleConns(idleConn)
 	conn.SetMaxOpenConns(openConn)
 
-	logger.GetLogger().Info("common sql initialized")
+	log.Info("common sql initialized")
 	return sqlDb
 }

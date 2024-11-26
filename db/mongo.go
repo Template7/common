@@ -9,7 +9,9 @@ import (
 	"time"
 )
 
-func NewNoSql(host string, port int, username string, password string) *mongo.Client {
+func NewNoSql(host string, port int, username string, password string, log *logger.Logger) *mongo.Client {
+	log = log.WithContext(context.Background()).WithService("mongoCore")
+
 	var cs string
 	if username != "" && password != "" {
 		cs = fmt.Sprintf("mongodb://%s:%s@%s:%d", username, password, host, port)
@@ -27,6 +29,6 @@ func NewNoSql(host string, port int, username string, password string) *mongo.Cl
 		panic(err)
 	}
 
-	logger.GetLogger().Info("mongo client initialized")
+	log.Info("mongo client initialized")
 	return c
 }
