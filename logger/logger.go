@@ -3,12 +3,10 @@ package logger
 import (
 	"context"
 	"fmt"
-	"github.com/Template7/common/config"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
-	"os"
 	"sync"
 )
 
@@ -74,37 +72,46 @@ func (l *Logger) Panic(msg string) {
 	l.core.Panic(msg)
 }
 
-func New() *Logger {
-	once.Do(func() {
-		cfg := config.New().Logger
-		zCfg := zap.NewProductionConfig()
-		zCfg.EncoderConfig.LevelKey = "logLevel"
-		zCfg.EncoderConfig.EncodeTime = zapcore.RFC3339NanoTimeEncoder
+func New(level string, format string, version string) *Logger {
+	zCfg := zap.NewProductionConfig()
+	zCfg.EncoderConfig.LevelKey = "logLevel"
+	zCfg.EncoderConfig.EncodeTime = zapcore.RFC3339NanoTimeEncoder
 
-		lvlM := map[string]zapcore.Level{
-			"debug": zap.DebugLevel,
-			"info":  zap.InfoLevel,
-			"warn":  zap.WarnLevel,
-			"error": zap.ErrorLevel,
-		}
+	if format == "console" {
+		zCfg.Encoding = "console"
+	}
 
-		// set log level
-		if lvl, exist := lvlM[cfg.Level]; exist {
-			zCfg.Level = zap.NewAtomicLevelAt(lvl)
-		} else {
-			zCfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-			log.Println(fmt.Sprintf("invalid log level: %s use debug level as default", cfg.Level))
-		}
+	lvlM := map[string]zapcore.Level{
+		"debug": zap.DebugLevel,
+		"info":  zap.InfoLevel,
+		"warn":  zap.WarnLevel,
+		"error": zap.ErrorLevel,
+	}
 
-		logger, _ := zCfg.Build(zap.AddCallerSkip(1))
-		defer logger.Sync() // flushes buffer, if any
+	// set log level
+	if lvl, exist := lvlM[level]; exist {
+		zCfg.Level = zap.NewAtomicLevelAt(lvl)
+	} else {
+		zCfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		log.Println(fmt.Sprintf("invalid log level: %s use debug level as default", level))
+	}
 
-		instance = &Logger{
-			core: logger.Sugar().With("version", os.Getenv("commitId")),
-		}
+	logger, _ := zCfg.Build(zap.AddCallerSkip(1))
+	defer logger.Sync() // flushes buffer, if any
 
-		instance.Info("logger initialized")
-	})
+	sLog := logger.Sugar()
+	if version != "" {
+		sLog = sLog.With("version", version)
+	}
+	instance = &Logger{
+		core: sLog,
+	}
 
+	instance.Info("common logger initialized")
+
+	return instance
+}
+
+func GetLogger() *Logger {
 	return instance
 }
